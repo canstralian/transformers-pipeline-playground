@@ -16,10 +16,13 @@ with gr.Blocks() as demo:
 
     @gr.render(inputs=[search_in], triggers=[search_in.submit])
     def get_interface_from_repo(repo_id: str, progress: gr.Progress = gr.Progress()):
-        progress(0.0, desc="Loading model")
-        pipe = pipeline(model=repo_id)
-        progress(1.0, desc="Model loaded")
-        gr.Interface.from_pipeline(pipe)
+        try:
+            progress(0.0, desc="Loading model")
+            pipe = pipeline(model=repo_id)
+            progress(1.0, desc="Model loaded")
+            gr.Interface.from_pipeline(pipe, flagging_mode="never")
+        except Exception as e:
+            gr.Markdown(f"This model is not supported. It might be too large or it does not work with Gradio. Try another model. Failed with expection: {e}")
 
 
 if __name__ == "__main__":
