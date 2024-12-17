@@ -1,0 +1,6 @@
+transformers
+torch
+sentencepiece
+sentence-transformers
+gradio-huggingfacehub-search
+torchvision
