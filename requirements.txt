@@ -4,3 +4,9 @@ sentencepiece
 sentence-transformers
 gradio-huggingfacehub-search
 torchvision
+pandas
+pillow
+datasets
+librosa
+opencv-python
+torchaudio
