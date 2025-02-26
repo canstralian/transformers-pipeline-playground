@@ -1,6 +1,12 @@
 import gradio as gr
 from transformers import pipeline
 
+class HuggingfaceHubSearch(gr.inputs.Textbox):
+    def __init__(self, label, placeholder, search_type, sumbit_on_select):
+        super().__init__(label=label, placeholder=placeholder)
+        self.search_type = search_type
+        self.sumbit_on_select = sumbit_on_select
+
 with gr.Blocks() as demo:
     gr.Markdown("## 🐇 Transformers Pipeline Playground")
     gr.Markdown(
