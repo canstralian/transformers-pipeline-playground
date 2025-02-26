@@ -12,3 +12,5 @@ opencv-python
 torchaudio
 flake8
 pytest
+black 
+bandit
