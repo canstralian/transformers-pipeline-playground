@@ -13,7 +13,7 @@ short_description: Search, load and play with transformer pipelines
 
 ## Transformers Pipeline Playground 🎡🤖
 
-** Welcome to the Transformers Pipeline Playground!** This project provides an interactive interface to explore and experiment with various transformer models using Hugging Face’s transformers library. Whether you’re a seasoned NLP practitioner or just getting started, this playground offers a hands-on experience with state-of-the-art models.
+**Welcome to the Transformers Pipeline Playground!** This project provides an interactive interface to explore and experiment with various transformer models using Hugging Face’s transformers library. Whether you’re a seasoned NLP practitioner or just getting started, this playground offers a hands-on experience with state-of-the-art models.
 
 **Features** ✨
    •   Interactive Model Exploration: Load and test different transformer models directly in your browser.
