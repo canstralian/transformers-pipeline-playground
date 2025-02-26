@@ -1,16 +1,3 @@
----
-title: Transformers Pipeline Playground
-emoji: 🐇
-colorFrom: pink
-colorTo: yellow
-sdk: gradio
-sdk_version: 5.9.1
-app_file: app.py
-pinned: true
-license: apache-2.0
-short_description: Search, load and play with transformer pipelines
----
-
 ## Transformers Pipeline Playground 🎡🤖
 
 **Welcome to the Transformers Pipeline Playground!** This project provides an interactive interface to explore and experiment with various transformer models using Hugging Face’s transformers library. Whether you’re a seasoned NLP practitioner or just getting started, this playground offers a hands-on experience with state-of-the-art models.
