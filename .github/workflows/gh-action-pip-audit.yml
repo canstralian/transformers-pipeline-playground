@@ -1,0 +1,26 @@
+name: Dependency Audit with pip-audit
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: '0 0 * * 1'  # Runs every Monday at midnight
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install pip-audit
+        run: pip install pip-audit
+
+      - name: Run pip-audit (Dependency Vulnerability Scan)
+        uses: nvie/pip-audit-action@v1.0
+        with:
+          requirements-file: requirements.txt  # Adjust if using Pipfile.lock
