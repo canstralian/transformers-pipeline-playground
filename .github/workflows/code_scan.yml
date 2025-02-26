@@ -20,7 +20,7 @@ jobs:
 
       - name: Push Model / Dataset / Space
         run: |
-          hf_repo="your_hf_username/your_repo_name"
+          hf_repo="whackthejacker/transformers-pipeline-playground"
           huggingface-cli repo create $hf_repo --type model --exist-ok
           git lfs install
           git add .
