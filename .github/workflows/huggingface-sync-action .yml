@@ -1,0 +1,26 @@
+name: Sync GitHub Repo to Hugging Face
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync_with_huggingface:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the GitHub repository
+      - name: Checkout the GitHub repository
+        uses: actions/checkout@v4
+
+      # Step 2: Sync with Hugging Face
+      - name: Sync with Hugging Face
+        uses: nateraw/huggingface-sync-action@v0.0.5
+        with:
+          github_repo_id: 'canstralian/transformers-pipeline-playground'  # Replace with your GitHub repo ID
+          huggingface_repo_id: 'canstralian/transformers-pipeline-playground'  # Replace with your Hugging Face repo ID
+          hf_token: ${{ secrets.HF_TOKEN }}  # Make sure to set this secret in GitHub secrets
+          repo_type: 'space'  # Change to 'model' or 'dataset' if syncing those
+          private: false  # Set to 'true' if you want the Hugging Face repo to be private
+          space_sdk: 'gradio'  # Set the appropriate space SDK (e.g., 'gradio', 'streamlit')
+          subdirectory: ''  # Specify subdirectory if syncing only part of the repo
