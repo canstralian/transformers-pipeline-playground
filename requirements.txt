@@ -10,3 +10,5 @@ datasets
 librosa
 opencv-python
 torchaudio
+flake8
+pytest
