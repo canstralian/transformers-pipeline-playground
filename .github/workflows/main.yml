@@ -1,0 +1,44 @@
+name: Format Python Code
+
+on: 
+  push:
+    branches:
+      - main  # Change to your primary branch if different
+
+jobs:
+  autopep8:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install autopep8
+        run: pip install autopep8
+
+      - name: Run autopep8 Formatting
+        run: autopep8 --recursive --in-place --aggressive --aggressive .
+
+      - name: Check for changes
+        run: |
+          git diff --exit-code || echo "Changes detected"
+
+      - name: Commit and Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "style: autopep8 formatting fixes"
+          title: "chore: Apply autopep8 formatting"
+          body: "This is an automated PR that applies PEP8 formatting using autopep8."
+          labels: "autopep8, automated pr"
+          branch: autopep8-patches
+          delete-branch: true
+          reviewers: canstralian  # Change to your GitHub username or team
+
+      - name: Print PR Info
+        run: echo "Pull Request Created: ${{ steps.cpr.outputs.pull-request-url }}"
