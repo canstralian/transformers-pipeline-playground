@@ -1,0 +1,19 @@
+name: "build-test"
+on: [push]
+
+jobs:
+  test_something:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3  # Use the latest version of checkout
+      - name: Create a test output
+        id: test
+        run: echo "::set-output name=summary::Test successful"  # Create a valid output
+      - uses: LouisBrunner/checks-action@v2.0.0
+        if: always()
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          name: Test XYZ
+          conclusion: ${{ job.status }}
+          output: |
+            {"summary":"${{ steps.test.outputs.summary }}"}
