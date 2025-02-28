@@ -1,51 +1,72 @@
+import gradio as gr
+from gradio_huggingfacehub_search import HuggingfaceHubSearch
+from transformers import pipeline, Pipeline
+from transformers.pipelines import PipelineException
+from huggingface_hub.utils import ModelNotFoundError
 import logging
-from huggingface_hub import InferenceApi
-from transformers import AutoTokenizer
 
-# Setup basic logging
+# Set up logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Set your API token and model repo ID
-API_TOKEN = "hf_YourAPITokenHere"
-MODEL_REPO = "Salesforce/codet5-base"  # adjust to the correct model repo
+# Initialize Hugging Face Hub search component
+search_in = HuggingfaceHubSearch(api_key="hf_YourAPITokenHere", submit_on_select=True)
 
-# Load tokenizer to check tokenization
-try:
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_REPO)
-except Exception as e:
-    logger.exception("Error loading tokenizer:")
-    raise
-
-# Verify tokenization is correct
-input_text = "def greet(user): print(f'hello <extra_id_0>!')"
-try:
-    tokenized = tokenizer(input_text, return_tensors="pt")
-    logger.info(f"Token IDs: {tokenized['input_ids']}")
-except Exception as e:
-    logger.exception("Tokenization error:")
-    raise
-
-# Initialize remote inference API client
-inference = InferenceApi(repo_id=MODEL_REPO, token=API_TOKEN)
-
-def generate_code(prompt: str, max_length: int = 20):
-    payload = {"inputs": prompt, "parameters": {"max_length": max_length}}
+# Function to load the selected model and create a pipeline
+def load_model(model_id):
     try:
-        response = inference(payload)
-        # Check if response has an error key
-        if isinstance(response, dict) and "error" in response:
-            logger.error(f"Inference API error: {response['error']}")
-            return None
-        return response
+        logger.info(f"Loading model: {model_id}")
+        model_pipeline = pipeline(model=model_id)
+        logger.info("Model loaded successfully.")
+        return model_pipeline
+    except ModelNotFoundError:
+        logger.error(f"Model '{model_id}' not found.")
+        return None
+    except PipelineException as e:
+        logger.error(f"Error creating pipeline: {e}")
+        return None
     except Exception as e:
-        logger.exception("Exception during remote inference:")
+        logger.error(f"Unexpected error: {e}")
         return None
 
+# Function to process input data using the loaded pipeline
+def process_input(model_pipeline, input_data):
+    try:
+        logger.info("Processing input data.")
+        output = model_pipeline(input_data)
+        logger.info("Processing complete.")
+        return output
+    except Exception as e:
+        logger.error(f"Error during processing: {e}")
+        return None
+
+# Gradio interface setup
+def create_interface():
+    with gr.Blocks() as demo:
+        gr.Markdown("# Transformers Pipeline Playground")
+        model_id = gr.Textbox(label="Enter Model ID from Hugging Face Hub")
+        input_data = gr.Textbox(label="Input Data")
+        output_data = gr.Textbox(label="Output Data")
+        load_button = gr.Button("Load Model")
+        process_button = gr.Button("Process Input")
+
+        # Load model on button click
+        def on_load_click():
+            model_pipeline = load_model(model_id.value)
+            if model_pipeline:
+                process_button.click(
+                    fn=lambda: process_input(model_pipeline, input_data.value),
+                    inputs=[],
+                    outputs=output_data,
+                )
+            else:
+                output_data.value = "Failed to load model."
+
+        load_button.click(on_load_click, inputs=[], outputs=[])
+
+    return demo
+
+# Run the Gradio interface
 if __name__ == "__main__":
-    result = generate_code(input_text)
-    if result is not None:
-        # Depending on the model's output format, adjust accordingly
-        logger.info(f"Generated output: {result}")
-    else:
-        logger.error("Failed to generate output.")
+    demo = create_interface()
+    demo.launch()
