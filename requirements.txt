@@ -4,7 +4,7 @@ sentencepiece==0.1.99
 sentence-transformers==2.2.2
 gradio==3.23.0
 gradio_huggingfacehub_search==0.0.12
-torchvision==0.15.2
+torchvision==0.22.1
 pandas==1.5.3
 pillow==9.5.0
 datasets==2.12.0
